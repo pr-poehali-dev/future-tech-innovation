@@ -19,7 +19,14 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
   const [role, setRole] = useState<Role>(null)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [inn, setInn] = useState("")
+  const [innError, setInnError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  const validateInn = (value: string) => {
+    if (value.length !== 10 && value.length !== 12) return "ИНН должен содержать 10 или 12 цифр"
+    return ""
+  }
 
   const handleRoleSelect = (r: Role) => {
     setRole(r)
@@ -28,6 +35,10 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (role === "investor") {
+      const error = validateInn(inn)
+      if (error) { setInnError(error); return }
+    }
     setLoading(true)
     await new Promise(res => setTimeout(res, 1000))
     setLoading(false)
@@ -41,6 +52,8 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
       setRole(null)
       setName("")
       setEmail("")
+      setInn("")
+      setInnError("")
     }, 300)
   }
 
@@ -132,6 +145,34 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
                     className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-600 focus:border-[#FF4D00]"
                   />
                 </div>
+                {role === "investor" && (
+                  <div>
+                    <Label className="text-neutral-400 text-sm mb-2 block">
+                      ИНН организации
+                      <span className="ml-1 text-neutral-600">(для верификации)</span>
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        value={inn}
+                        onChange={e => { setInn(e.target.value.replace(/\D/g, "")); setInnError("") }}
+                        placeholder="1234567890"
+                        maxLength={12}
+                        required
+                        className={`bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-600 focus:border-[#FF4D00] pr-10 ${innError ? "border-red-500 focus:border-red-500" : ""}`}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <Icon name="Building2" size={16} className="text-neutral-600" />
+                      </div>
+                    </div>
+                    {innError ? (
+                      <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
+                        <Icon name="AlertCircle" size={12} />{innError}
+                      </p>
+                    ) : (
+                      <p className="text-neutral-600 text-xs mt-1">10 цифр для юр. лица, 12 — для ИП</p>
+                    )}
+                  </div>
+                )}
                 <Button
                   type="submit"
                   disabled={loading}
@@ -163,9 +204,12 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
                 <Icon name="CheckCircle" size={32} className="text-[#FF4D00]" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Заявка принята!</h2>
-              <p className="text-neutral-400 text-sm mb-8">
+              <p className="text-neutral-400 text-sm mb-2">
                 Мы свяжемся с вами на <span className="text-white">{email}</span> в ближайшее время.
               </p>
+              {role === "investor" && (
+                <p className="text-neutral-600 text-xs mb-6">ИНН {inn} будет проверен нашей командой.</p>
+              )}
               <Button
                 onClick={handleClose}
                 variant="outline"
