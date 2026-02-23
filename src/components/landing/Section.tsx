@@ -1,8 +1,9 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import Icon from "@/components/ui/icon"
 import type { SectionProps } from "@/types"
 
-export default function Section({ id, title, subtitle, content, isActive, showButton, buttonText }: SectionProps) {
+export default function Section({ id, title, subtitle, content, isActive, showButton, buttonText, cards, testimonials }: SectionProps) {
   return (
     <section id={id} className="relative h-screen w-full snap-start flex flex-col justify-center p-8 md:p-16 lg:p-24">
       {subtitle && (
@@ -32,6 +33,59 @@ export default function Section({ id, title, subtitle, content, isActive, showBu
         >
           {content}
         </motion.p>
+      )}
+      {cards && (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 max-w-5xl"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isActive ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {cards.map((card, i) => (
+            <motion.div
+              key={i}
+              className="border border-neutral-800 rounded-xl p-6 bg-neutral-900/50 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isActive ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+            >
+              <div className="w-10 h-10 rounded-lg bg-[#FF4D00]/10 flex items-center justify-center mb-4">
+                <Icon name={card.icon} size={20} className="text-[#FF4D00]" />
+              </div>
+              <h3 className="text-white font-semibold text-lg mb-2">{card.title}</h3>
+              <p className="text-neutral-400 text-sm leading-relaxed">{card.description}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+      {testimonials && (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 max-w-5xl"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isActive ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={i}
+              className="border border-neutral-800 rounded-xl p-6 bg-neutral-900/50 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isActive ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+            >
+              <p className="text-neutral-300 text-sm leading-relaxed mb-4">"{t.text}"</p>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#FF4D00]/20 flex items-center justify-center">
+                  <span className="text-[#FF4D00] text-xs font-bold">{t.name[0]}</span>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">{t.name}</p>
+                  <p className="text-neutral-500 text-xs">{t.role}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       )}
       {showButton && (
         <motion.div
