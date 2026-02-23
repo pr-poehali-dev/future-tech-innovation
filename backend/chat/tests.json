@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "name": "Register author",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "register", "name": "Тест Автор", "email": "test_author@example.com", "role": "author"},
+      "expectedStatus": 200,
+      "expectedBody": "author",
+      "bodyMatcher": "contains"
+    },
+    {
+      "name": "Register investor",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "register", "name": "Тест Инвестор", "email": "test_investor@example.com", "role": "investor", "inn": "1234567890"},
+      "expectedStatus": 200,
+      "expectedBody": "investor",
+      "bodyMatcher": "contains"
+    }
+  ]
+}

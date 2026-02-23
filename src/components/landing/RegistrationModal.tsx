@@ -210,13 +210,22 @@ export default function RegistrationModal({ open, onClose }: RegistrationModalPr
               {role === "investor" && (
                 <p className="text-neutral-600 text-xs mb-6">ИНН {inn} будет проверен нашей командой.</p>
               )}
-              <Button
-                onClick={handleClose}
-                variant="outline"
-                className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white"
-              >
-                Закрыть
-              </Button>
+              <div className="flex flex-col gap-3 mt-4">
+                <Button
+                  onClick={() => window.location.href = "/chat"}
+                  className="bg-[#FF4D00] hover:bg-[#e04400] text-white"
+                >
+                  <Icon name="MessageSquare" size={16} className="mr-2" />
+                  Перейти в чат
+                </Button>
+                <Button
+                  onClick={handleClose}
+                  variant="outline"
+                  className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                >
+                  Закрыть
+                </Button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
